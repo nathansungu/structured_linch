@@ -1,7 +1,6 @@
 const { Orders, Order_items, Products, Company } = require('../models');
 
-//import modules
-
+//view all orders
 const order = async(req, res)=>{
     const {customer_id} = req.body;
   
@@ -53,7 +52,7 @@ const order = async(req, res)=>{
     }
 
 }
-const cancell_order = async(req, res) =>{
+const cancel_order = async(req, res) =>{
     const { orderid, customer_id } = req.body;
     if (!orderid || !customer_id) {
         return res.status(400).json({ message: 'Order ID and customer ID are required' });
@@ -88,3 +87,25 @@ const delivery_status = async(req, res) =>{
         res.status(500).send('Something went wrong');
     }
 }
+//update order status
+const updateorderstatus = async(req, res) =>{
+    const { orderid, status } = req.body;
+    if (!orderid || !status) {
+        return res.status(400).json({ message: 'Order ID and status are required' });
+    }
+
+    try {
+        const order = await Orders.findByPk(orderid);
+        if (!order) return res.status(404).json({ message: 'Order not found' });
+
+        order.delivery_status = status;
+        await order.save();
+
+        res.status(200).json({ message: 'Order status updated successfully', order });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Something went wrong');
+    }
+}
+
+module.exports = { order, cancel_order, delivery_status, updateorderstatus };

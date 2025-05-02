@@ -77,7 +77,7 @@ const add_to_cart= async (req, res) => {
     }
  }
 
-const cartremove = async (req, res) => {
+const cart_remove = async (req, res) => {
     const { customer_id, product_id } = req.body;
 
     if (!customer_id || !product_id) {
@@ -113,9 +113,46 @@ const cartremove = async (req, res) => {
         res.status(500).send('Something went wrong');
     }
 }
+const cart_update =async (req, res)=>{
+    const { customer_id, product_id, quantity } = req.body;
+    if (!customer_id || !product_id || !quantity) {
+        return res.status(400).json({ message: 'Valid customer ID, product ID, and quantity are required' });
+    }
+    try {
+        // Find the pending order for the customer
+        const order = await Orders.findOne({ where: { customer_id, status: 'pending' } });
+        if (!order) {
+            return res.status(404).json({ message: 'No pending order found' });
+        }
+
+        // Find the order item to be updated
+        const orderItem = await Order_items.findOne({ where: { order_id: order.id, product_id } });
+        if (!orderItem) {
+            return res.status(404).json({ message: 'Product not found in the cart' });
+        }
+
+        // Update the quantity of the order item
+        orderItem.quantity = quantity;
+        await orderItem.save();
+
+        // Recalculate the total amount
+        const remainingItems = await Order_items.findAll({ where: { order_id: order.id } });
+        const total_amount = remainingItems.reduce((sum, item) => sum + item.quantity * item.price, 0);
+
+        order.total_amount = total_amount;
+        await order.save();
+
+        res.status(200).json({ message: 'Cart updated successfully', order });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Something went wrong');
+    }
+
+}
 
 module.exports = {
     add_to_cart,
     view_cart,
-    cartremove,
+    cart_remove,
+    cart_update 
 }

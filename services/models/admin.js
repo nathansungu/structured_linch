@@ -1,3 +1,5 @@
+//const { Model } = require("sequelize");
+
 // admin model
 const Admin = sequelize.define("Admin_users", {
     first_name: { type: DataTypes.STRING(30), allowNull: false },
@@ -6,4 +8,6 @@ const Admin = sequelize.define("Admin_users", {
     email: { type: DataTypes.STRING(50), allowNull: false, unique:true },
     password: { type: DataTypes.STRING(100), allowNull: false }
 });
+
+Model.exports = Admin;
 

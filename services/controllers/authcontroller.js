@@ -1,6 +1,5 @@
 //authentication controllers
 const {Customer, Admin, } = require('../models');
-const Admin = require('../models/Admin');
 const path = require('path');
 const bcrypt = require('bcrypt');
 const session = require("../config/session");

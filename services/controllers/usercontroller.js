@@ -25,3 +25,6 @@ const editprofile = async (req, res) => {
         res.status(500).json({ message: 'Error updating profile' });
     }
 };
+module.exports = {
+    editprofile,
+};

@@ -1,8 +1,6 @@
 const {Customer, Orders, Order_items, Products, Admin} = require('../models');
 //import authmiddleware
-const { isAuthenticated } = require('../middlewares/authMiddleware');
-
-const registerdmin = async (req, res) => {
+const registeradmin = async (req, res) => {
     try {
         const { first_name, second_name, email, phone_no, password, confirmPassword } = req.body;
         if (!first_name || !second_name || !email || !phone_no || !password || !confirmPassword) {
@@ -196,6 +194,17 @@ const delete_customer = async (req, res) => {
     }
 }
 
+module.exports = {
+    registeradmin,
+    get_all_admin,
+    update_delivery_status,
+    get_all_orders,
+    get_order_by_id,
+    cancel_order,
+    get_all_customers,
+    get_customer_by_id,
+    delete_customer
+};
 
 
 

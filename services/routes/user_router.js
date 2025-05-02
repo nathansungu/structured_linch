@@ -1,13 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const userController = require('../controllers/userController');
-const { isAuthenticated } = require('../middlewares/authMiddleware');
-
+const {editprofile} = require('../controllers/usercontroller');
+const { isAuthenticated } = require('../middlewares/authmiddleware');
+const usercontroller = require('../controllers/authcontroller')
 // Public routes
-router.post('/register', userController.registerUser);
-router.post('/login', userController.loginUser);
+router.put('/editprofile',isAuthenticated, editprofile);
 
 // Protected route
-router.get('/profile', isAuthenticated, userController.getUserProfile);
+router.get('/profile', isAuthenticated, usercontroller.profile_details);
+
+// Login page
+router.get('/profile/page', usercontroller.customer_login_page);
 
 module.exports = router;
