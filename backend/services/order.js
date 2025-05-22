@@ -2,7 +2,7 @@ import Customerror from "../errors/customerror";
 import { Company, Customer, Order_items, Orders, Products } from "../models";
 
 //create order
-const addorder = async (data) => {
+const add_order = async (data) => {
   const { customer_id } = data;
   if (!customer_id) {
     Next(new Customerror(400, "Provide userid"));
@@ -46,10 +46,15 @@ const addorder = async (data) => {
     }
   }
 
-  res.status(200).json({ message: "Order placed successfully", order: order });
+  res.status(200).json({
+    message: "Order placed successfully",
+    order: order,
+  });
 };
+
+
 //cancel order
-const deleteoder = async (data) => {
+const cancel_order = async (data) => {
   const { order_id } = data;
 
   const order = await Orders.findOne({
@@ -64,8 +69,9 @@ const deleteoder = async (data) => {
   await order.save();
   return res.status(200).json({ message: " Order cancelled", order: order });
 };
+
 //check delivery status
-const checkdeliverystatus = async (data) => {
+const check_delivery_status = async (data) => {
   const { order_id } = data;
   const order = await Orders.findOne({
     where: { id: order_id },
@@ -75,4 +81,28 @@ const checkdeliverystatus = async (data) => {
     deliverystatus: order.delivery_status,
   });
 };
-//update order
+
+//update order delivery ststus
+const update_delivery_status = async (data) => {
+  const { user_id, status, order_id } = data;
+  if (!user_id || !status || !order_id) {
+    res.status(400).json({ message: "Provide alll the detail" });
+  }
+  const update_order = await Orders.update({
+    data: { user_id, status },
+    where: {
+      user_id: user_id,
+    },
+  });
+  if (update_order) {
+    return res.status(200).json({ message: `Order ${status}` });
+  } else {
+    Next(new Customerror(400, "Failed to update order status"));
+  }
+};
+module.exports={
+  add_order, 
+  update_delivery_status,
+  cancel_order,
+  check_delivery_status
+}

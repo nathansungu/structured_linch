@@ -30,10 +30,14 @@ const viewprofile = async(data)=> {
         where: {userid: userid}
     })
     if(!getprofile){
-        Next (new Customerror(400, "Oops, failed to fetch profile."))
+        Next (new Customerror(400, "Unable to "))
     }
     return{
         message: "profile fetched",
         Profile: getprofile
     }
+}
+module.exports ={
+    viewprofile,
+    editprofile,
 }
