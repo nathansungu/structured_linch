@@ -47,7 +47,6 @@ const order = async(req, res)=>{
   
       res.status(200).json({ message: 'Order placed successfully', order });
     } catch (error) {
-      console.error(error);
       res.status(500).send('Something went wrong');
     }
 
